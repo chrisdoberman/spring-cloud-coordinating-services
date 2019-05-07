@@ -1,5 +1,6 @@
 package pluralsight.demo;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -23,9 +24,10 @@ public class DashboardController {
 
 	@Autowired
 	private RestTemplate restTemplate;
-	
+
+	@HystrixCommand(fallbackMethod = "getTollRateBackup")
 	@RequestMapping("/dashboard")
-	public String GetTollRate(@RequestParam int stationId, Model m) {
+	public String getTollRate(@RequestParam int stationId, Model m) {
 
 		// use the injected resttemplate that uses a load balanced client that is set at run time
 		// and use the registry name instead of hardcoded url.
@@ -35,6 +37,12 @@ public class DashboardController {
 				TollRate.class);
 		log.info("stationId: {}", stationId);
 		m.addAttribute("rate", tr.getCurrentRate());
+		return "dashboard";
+	}
+
+	public String getTollRateBackup(@RequestParam int stationId, Model m) {
+		log.info("Fallback operation called!");
+		m.addAttribute("rate", "1.00");
 		return "dashboard";
 	}
 }
