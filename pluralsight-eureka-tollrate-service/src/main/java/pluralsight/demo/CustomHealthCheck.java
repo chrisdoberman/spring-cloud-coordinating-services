@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomHealthCheck implements HealthIndicator {
 
-    private int errorCode = 0;
+    private int errorCode = 8; //set to not simulate down
 
     @Override
     public Health health() {
