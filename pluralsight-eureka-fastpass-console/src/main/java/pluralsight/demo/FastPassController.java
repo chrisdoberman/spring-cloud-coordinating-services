@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Slf4j
 // when using eureka you don't have to specify the name field here, just being explicit
-@RibbonClient(name = "pluralsight-fastpass-service")
+@RibbonClient(name = "pluralsight-fastpass-service", configuration = TollClientRoutingConfig.class)
 @Controller
 public class FastPassController {
 
