@@ -9,6 +9,7 @@ import org.springframework.cloud.stream.messaging.Sink;
 
 @Slf4j
 @EnableBinding(Sink.class)
+//@EnableBinding(Processor.class)
 @SpringBootApplication
 public class PluralsightStreamTollintakeApplication {
 
@@ -16,8 +17,24 @@ public class PluralsightStreamTollintakeApplication {
         SpringApplication.run(PluralsightStreamTollintakeApplication.class, args);
     }
 
-    @StreamListener(Sink.INPUT)
-    public void log(String msg) {
-        log.info(msg);
+    //demo conditional logic in streamlistener
+    @StreamListener(target = Sink.INPUT, condition = "headers['speed'] > 40")
+    public void logFast(String msg) {
+        log.info("fast - {}", msg);
     }
+
+    //demo conditional logic in streamlistener
+    @StreamListener(target = Sink.INPUT, condition = "headers['speed'] <= 40")
+    public void logSlow(String msg) {
+        log.info("slow - {}", msg);
+    }
+
+    // demo a processor
+    //@StreamListener(Sink.INPUT)
+    /*@StreamListener(Processor.INPUT)
+    @SendTo(Processor.OUTPUT)
+    public String log(String msg) {
+        log.info(msg);
+        return msg;
+    }*/
 }
